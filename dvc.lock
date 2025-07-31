@@ -1,0 +1,84 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/dataIngestion.py
+    deps:
+    - path: src/dataIngestion.py
+      hash: md5
+      md5: ee916ec2844b1eb8d0453a8b246f058d
+      size: 2941
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 1a287d34dc172d9f950c03dae35f7e73.dir
+      size: 484846
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/dataPP.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 1a287d34dc172d9f950c03dae35f7e73.dir
+      size: 484846
+      nfiles: 2
+    - path: src/dataPP.py
+      hash: md5
+      md5: 8f564c2a5c5cfd62acb137652d5f49c0
+      size: 4270
+    outs:
+    - path: data/interim
+      hash: md5
+      md5: 40cb848ce71a81c4f582d99fa6f0a9e8.dir
+      size: 260026
+      nfiles: 2
+  feature_engineering:
+    cmd: python src/featureEngine.py
+    deps:
+    - path: data/interim
+      hash: md5
+      md5: 40cb848ce71a81c4f582d99fa6f0a9e8.dir
+      size: 260026
+      nfiles: 2
+    - path: src/featureEngine.py
+      hash: md5
+      md5: 50124b7bbbe75bd04d9f03522d14b9f5
+      size: 3272
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 106fc86893102567b00fe5a854641c2b.dir
+      size: 1179851
+      nfiles: 2
+  model_building:
+    cmd: python src/modelTraining.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 106fc86893102567b00fe5a854641c2b.dir
+      size: 1179851
+      nfiles: 2
+    - path: src/modelTraining.py
+      hash: md5
+      md5: 27a8bc63ff630da1889370fffb6ecefe
+      size: 3473
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: cc812dc986f8dd6d4668e9aa858c94c0
+      size: 1002935
+  model_evaluation:
+    cmd: python src/modelEvaluation.py
+    deps:
+    - path: models/model.pkl
+      hash: md5
+      md5: cc812dc986f8dd6d4668e9aa858c94c0
+      size: 1002935
+    - path: src/modelEvaluation.py
+      hash: md5
+      md5: 27fd85d3a1cb6de57b2956ceb42b977d
+      size: 3603
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 52a4581c9760602c23d32474a82b93d7
+      size: 144
